@@ -45,11 +45,15 @@ const TodoList = () => {
             console.log(error);
         }
     }
-    const clearAll = async () =>{
-        for (const item of list ) {
-            await deleteTask(item.id);
+    const clearAll = async () => {
+        try {
+            await Promise.all(list.map((item) => deleteTask(item.id)));
+            setList([]);
+        } catch (error) {
+            console.log(error);
         }
     }
+
     return (
         <>
             <div className="d-flex justify-content-center">
@@ -69,6 +73,7 @@ const TodoList = () => {
                     {list.length} {list.length === 1 ? "item left" : "items left"}
                 </footer>
             </div>
+            <div className="mt-3 d-flex justify-content-center"><button className="btn btn-dark" onClick={clearAll}>Limpiar lista</button></div>
         </>
     )
 }
