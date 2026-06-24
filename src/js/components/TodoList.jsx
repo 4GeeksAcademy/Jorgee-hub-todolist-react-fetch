@@ -22,9 +22,15 @@ const TodoList = () => {
             setTask("");
         }
     }
-    const deleteTask = (indexToDelete) => {
-        const newList = list.filter((_, index) => index !== indexToDelete);
-        setList(newList);
+    const deleteTask = async (id) => {
+        try {
+            await fetch(`https://playground.4geeks.com/todo/todos/${id}`, {
+                method: "DELETE"
+            });
+            setList(list.filter((item) => item.id !== id));
+        } catch (error) {
+            console.log(error);
+        }
     }
     const addTask = async (label) => {
         try {
@@ -39,6 +45,11 @@ const TodoList = () => {
             console.log(error);
         }
     }
+    const clearAll = async () =>{
+        for (const item of list ) {
+            await deleteTask(item.id);
+        }
+    }
     return (
         <>
             <div className="d-flex justify-content-center">
@@ -50,7 +61,7 @@ const TodoList = () => {
                     {list.map((item, index) => (
                         <li key={index}>
                             {item.label}
-                            <span className="deleteBtn text-secondary" onClick={() => deleteTask(index)}>x</span>
+                            <span className="deleteBtn text-secondary" onClick={() => deleteTask(item.id)}>x</span>
                         </li>
                     ))}
                 </ul>
