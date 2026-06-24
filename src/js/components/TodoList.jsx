@@ -18,13 +18,26 @@ const TodoList = () => {
     }, []);
     const keyboardControl = (event) => {
         if (event.key === "Enter") {
-            setList([...list, task])
+            addTask(task)
             setTask("");
         }
     }
     const deleteTask = (indexToDelete) => {
         const newList = list.filter((_, index) => index !== indexToDelete);
         setList(newList);
+    }
+    const addTask = async (label) => {
+        try {
+            const response = await fetch("https://playground.4geeks.com/todo/todos/Jorgee-hub", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ label: label, is_done: false })
+            });
+            const newTodo = await response.json();
+            setList([...list, newTodo]);
+        } catch (error) {
+            console.log(error);
+        }
     }
     return (
         <>
@@ -36,7 +49,7 @@ const TodoList = () => {
                 <ul>{/* lista de tareas */}
                     {list.map((item, index) => (
                         <li key={index}>
-                            {item}
+                            {item.label}
                             <span className="deleteBtn text-secondary" onClick={() => deleteTask(index)}>x</span>
                         </li>
                     ))}
