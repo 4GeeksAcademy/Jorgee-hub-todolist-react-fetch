@@ -3,17 +3,17 @@ import { useEffect, useState } from "react";
 const TodoList = () => {
     const [task, setTask] = useState("");
     const [list, setList] = useState([]);
-    useEffect(() => {
-        const loadTodos = async () => {
-            try {
-                const response = await fetch("https://playground.4geeks.com/todo/users/Jorgee-hub");
-                const data = await response.json();
-                console.log(data);
-                setList(data.todos)
-            } catch (error) {
-                console.log(error);
-            }
+    const loadTodos = async () => {
+        try {
+            const response = await fetch("https://playground.4geeks.com/todo/users/Jorgee-hub");
+            const data = await response.json();
+            console.log(data);
+            setList(data.todos)
+        } catch (error) {
+            console.log(error);
         }
+    }
+    useEffect(() => {
         loadTodos();
     }, []);
     const keyboardControl = (event) => {
@@ -27,7 +27,7 @@ const TodoList = () => {
             await fetch(`https://playground.4geeks.com/todo/todos/${id}`, {
                 method: "DELETE"
             });
-            setList(list.filter((item) => item.id !== id));
+            loadTodos();
         } catch (error) {
             console.log(error);
         }
@@ -69,11 +69,11 @@ const TodoList = () => {
                         </li>
                     ))}
                 </ul>
-                <footer className="m-1 text-secondary fs-6">
+                <footer className="m-1 text-secondary">
                     {list.length} {list.length === 1 ? "item left" : "items left"}
                 </footer>
             </div>
-            <div className="mt-3 d-flex justify-content-center"><button className="btn btn-dark" onClick={clearAll}>Limpiar lista</button></div>
+            <div className="mt-3 d-flex justify-content-center"><button className=" clearBtn btn btn-dark text-light" onClick={clearAll}>Limpiar lista</button></div>
         </>
     )
 }
